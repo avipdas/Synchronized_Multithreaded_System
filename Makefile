@@ -1,15 +1,19 @@
-CC      := clang
-CFLAGS  := -Wall -Wextra -Werror -pedantic
+CC = clang
+CFLAGS = -Wall -Wextra -Werror -pedantic -pthread
+TARGET = httpserver
+SOURCES = httpserver.c
+OBJECTS = $(SOURCES:.c=.o)
 
 .PHONY: all clean
 
-all: queue.o rwlock.o
+all: $(TARGET)
 
-queue.o: queue.c queue.h
-	$(CC) $(CFLAGS) -c queue.c -o queue.o
+$(TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
 
-rwlock.o: rwlock.c rwlock.h
-	$(CC) $(CFLAGS) -c rwlock.c -o rwlock.o
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f *.o
+	rm -f $(OBJECTS) $(TARGET)
+
